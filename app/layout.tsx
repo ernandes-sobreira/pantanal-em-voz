@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pantanal em Voz",
-  description: "Salas coletivas para conversar, responder e construir mensagens sobre o Pantanal.",
+  description: "Roletas de conversa e salas coletivas para aproximar pessoas e falar sobre o Pantanal.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

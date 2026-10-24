@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 
 export const dynamic = "force-dynamic";
 
-type RoomRow = { id: string; code: string; title: string; topic: string; visibility: "public" | "secret"; created_at: string; manager_key_hash: string };
+type RoomRow = { id: string; code: string; title: string; topic: string; audience: string; visibility: "public" | "secret"; created_at: string; manager_key_hash: string };
 type PostRow = { id: string; room_id: string; nickname: string; topic: string; audience: string; body: string; author_key_hash: string; created_at: string; updated_at: string };
 type ReplyRow = { id: string; post_id: string; nickname: string; body: string; author_key_hash: string; created_at: string; updated_at: string };
 type Input = Record<string, unknown>;
@@ -37,7 +37,7 @@ function equal(a: string, b: string) {
   return diff === 0;
 }
 function publicRoom(room: RoomRow) {
-  return { id: room.id, code: room.code, title: room.title, topic: room.topic, visibility: room.visibility, createdAt: room.created_at };
+  return { id: room.id, code: room.code, title: room.title, topic: room.topic, audience: room.audience || "Público geral", visibility: room.visibility, createdAt: room.created_at };
 }
 function isAppManager(request: Request) {
   const signedInUserId = request.headers.get("oai-authenticated-user-id");
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
     if (!db) return reply({ error: "O banco compartilhado ainda não está conectado." }, 503);
     const parts = new URL(request.url).pathname.split("/").filter(Boolean).slice(1);
     if (parts.length === 1 && parts[0] === "rooms") {
-      const result = await db.prepare("SELECT id, code, title, topic, visibility, created_at, manager_key_hash FROM rooms WHERE visibility = 'public' ORDER BY created_at DESC LIMIT 50").all<RoomRow>();
+      const result = await db.prepare("SELECT id, code, title, topic, audience, visibility, created_at, manager_key_hash FROM rooms WHERE visibility = 'public' ORDER BY created_at DESC LIMIT 50").all<RoomRow>();
       return reply({ rooms: (result.results ?? []).map(publicRoom) });
     }
     if (parts.length === 2 && parts[0] === "rooms") {
@@ -85,14 +85,15 @@ export async function POST(request: Request) {
     if (parts.length === 1 && parts[0] === "rooms") {
       const title = clean(body.title, 72);
       const topic = clean(body.topic, 48);
+      const audience = clean(body.audience, 64) || "Público geral";
       const visibility = body.visibility === "secret" ? "secret" : "public";
       if (title.length < 3 || !topic) return reply({ error: "Informe um nome de sala e um tema." }, 400);
       const id = crypto.randomUUID();
       const code = roomCode();
       const managerKey = token();
-      await db.prepare("INSERT INTO rooms (id, code, title, topic, visibility, manager_key_hash) VALUES (?, ?, ?, ?, ?, ?)")
-        .bind(id, code, title, topic, visibility, await hash(managerKey)).run();
-      return reply({ room: { id, code, title, topic, visibility }, managerKey }, 201);
+      await db.prepare("INSERT INTO rooms (id, code, title, topic, audience, visibility, manager_key_hash) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        .bind(id, code, title, topic, audience, visibility, await hash(managerKey)).run();
+      return reply({ room: { id, code, title, topic, audience, visibility }, managerKey }, 201);
     }
 
     if (parts.length === 3 && parts[0] === "rooms" && parts[2] === "posts") {

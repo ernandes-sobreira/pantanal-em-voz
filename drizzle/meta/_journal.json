@@ -8,6 +8,13 @@
       "when": 1792762795468,
       "tag": "0000_fast_payback",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792854831295,
+      "tag": "0001_outgoing_major_mapleleaf",
+      "breakpoints": true
     }
   ]
 }

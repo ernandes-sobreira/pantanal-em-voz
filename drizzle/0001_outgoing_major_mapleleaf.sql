@@ -1,0 +1,1 @@
+ALTER TABLE `rooms` ADD `audience` text DEFAULT 'Público geral' NOT NULL;

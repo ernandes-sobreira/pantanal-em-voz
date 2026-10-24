@@ -6,6 +6,7 @@ export const rooms = sqliteTable("rooms", {
   code: text("code").notNull().unique(),
   title: text("title").notNull(),
   topic: text("topic").notNull(),
+  audience: text("audience").notNull().default("Público geral"),
   visibility: text("visibility", { enum: ["public", "secret"] }).notNull(),
   managerKeyHash: text("manager_key_hash").notNull(),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
