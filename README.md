@@ -2,7 +2,9 @@
 
 App coletivo para aproximar pessoas e conversar sobre o Pantanal.
 
-**App ao vivo:** <https://pantanal-em-voz.ernandes-sobreira.chatgpt.site>
+**App no GitHub Pages:** <https://ernandes-sobreira.github.io/pantanal-em-voz/>
+
+**Versão completa e gerência:** <https://pantanal-em-voz.ernandes-sobreira.chatgpt.site>
 
 ## Roletas e salas
 
@@ -15,12 +17,12 @@ App coletivo para aproximar pessoas e conversar sobre o Pantanal.
 
 ## Autores
 
-- Ernandes
+- Ernandes Sobreira
 - Beatriz Ferraz Bühler
 - Maísa Consuelo dos Santos
 - Juliana Cássia de Marchi
-- Elaine
-- Basirat
+- Elaine Barreto de Menezes
+- Basirat Abiodun Ariyibi
 
 ## Identidade visual
 
@@ -30,4 +32,6 @@ A interface usa a paleta azul, verde-água e coral, e as famílias Sora e Source
 
 O projeto usa React, TypeScript, Vinext e Cloudflare D1. Para trabalhar no código, use Node.js `>=22.13.0`, instale as dependências com `pnpm install` e inicie o ambiente com `pnpm dev`.
 
-A criação e edição de salas no ambiente publicado depende do banco D1 e das configurações de hospedagem deste projeto. Não coloque chaves de gerente, credenciais ou arquivos locais de ambiente no repositório.
+O GitHub Pages hospeda a interface pública. As salas e mensagens ficam no banco D1 do serviço da versão completa; assim, grupos que acessam pelos dois endereços compartilham os mesmos dados. O Pages não executa um servidor ou banco próprio. A interface estática chama a API da versão completa, que permite solicitações do domínio do GitHub Pages.
+
+Para gerar os arquivos estáticos do GitHub Pages, use `pnpm build:pages`. Para executar o app completo, use `pnpm dev`. Não coloque chaves de gerente, credenciais ou arquivos locais de ambiente no repositório.

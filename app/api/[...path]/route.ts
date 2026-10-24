@@ -8,7 +8,23 @@ type ReplyRow = { id: string; post_id: string; nickname: string; body: string; a
 type Input = Record<string, unknown>;
 
 function reply(data: unknown, status = 200) {
-  return Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
+  return Response.json(data, { status, headers: {
+    "Cache-Control": "no-store",
+    "Access-Control-Allow-Origin": "https://ernandes-sobreira.github.io",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
+  } });
+}
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: {
+    "Access-Control-Allow-Origin": "https://ernandes-sobreira.github.io",
+    "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  } });
 }
 function clean(value: unknown, max: number) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
